@@ -1,7 +1,7 @@
 const Category = require("models/category");
 const Product = require("models/product");
 
-exports.get_list = async (req, res) => {
+exports.list = async (req, res) => {
   try {
     const categoryList = await Category.find();
     res.status(200).json({
@@ -13,7 +13,7 @@ exports.get_list = async (req, res) => {
   }
 };
 
-exports.get_one = async (req, res) => {
+exports.single = async (req, res) => {
   try {
     const categoryId = req.params.categoryId;
     const products = await Product.find({ categoryId: categoryId }).select(

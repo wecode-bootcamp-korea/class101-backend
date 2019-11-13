@@ -2,12 +2,13 @@ const axios = require("axios");
 const Product = require("models/product.js");
 const getCurriculum = require("./getCurriculum");
 const getComments = require("./comment");
+const Curriculum = require("models/curriculum");
 
-function getDetails(productId) {
-    axios
-        .post("https://gql-prod.class101.net/graphql", {
-            operationName: "ProductDetailById",
-            query: `query ProductDetailById($productId: ID!) {
+exports.getDetails = productId => {
+  axios
+    .post("https://gql-prod.class101.net/graphql", {
+      operationName: "ProductDetailById",
+      query: `query ProductDetailById($productId: ID!) {
       product: productById(productId: $productId) {
         ...ProductDetail
         __typename
@@ -504,50 +505,48 @@ fragment ProductTimeline on Timeline {
   __typename
 }
 `,
-            variables: { productId: productId }
-        })
-        .then(res => {
-            const prod = res.data.data.product;
-            const result = new Product({
-                _id: prod._id,
-                fireStoreId: prod.firestoreId,
-                title: prod.title,
-                coverImageUrl: prod.coverImageUrl,
-                willOpenAt: prod.willOpenAt,
-                dueDate: prod.dueDate,
-                score: prod.score,
-                reservationCount: prod.reservationCount,
-                wishlistedCount: prod.wishlistedCount,
-                packageIds: prod.packageIds,
-                denormalizedPackage: prod.denormalizedPackage,
-                curriculum: prod.klassId,
-                categoryId: prod.categoryId,
-                feedbackCount: prod.feedbackCount,
-                feedbackGoodCount: prod.feedbackGoodCount,
-                ownerUser: prod.ownerUser,
-                recommendations: prod.recommendations,
-                packageDescription: prod.packageDescription,
-                difficulty: prod.difficulty,
-                description: prod.description,
-                satisfactionRate: prod.satisfactionRate,
-                summary: prod.summary,
-                qnas: prod.qnas,
-                skills: prod.skills,
-                interviews: prod.interviews,
-                note: prod.note,
-                signature: prod.signature,
-                students: prod.students
-            }).save();
-            // console.log(prod);
-            // return prod._id;
-            // return result.curriculum;
-        })
-        .then(res => {
-            // getComments(res);
-            // getCurriculum(res);
-            // console.log(res);
-        })
-        .catch(err => console.log(err));
-}
-
-module.exports = getDetails;
+      variables: { productId: productId }
+    })
+    .then(res => {
+      const prod = res.data.data.product;
+      const result = new Product({
+        _id: prod._id,
+        fireStoreId: prod.firestoreId,
+        title: prod.title,
+        coverImageUrl: prod.coverImageUrl,
+        willOpenAt: prod.willOpenAt,
+        dueDate: prod.dueDate,
+        score: prod.score,
+        reservationCount: prod.reservationCount,
+        wishlistedCount: prod.wishlistedCount,
+        packageIds: prod.packageIds,
+        denormalizedPackage: prod.denormalizedPackage,
+        curriculum: prod.klassId,
+        categoryId: prod.categoryId,
+        feedbackCount: prod.feedbackCount,
+        feedbackGoodCount: prod.feedbackGoodCount,
+        ownerUser: prod.ownerUser,
+        recommendations: prod.recommendations,
+        packageDescription: prod.packageDescription,
+        difficulty: prod.difficulty,
+        description: prod.description,
+        satisfactionRate: prod.satisfactionRate,
+        summary: prod.summary,
+        qnas: prod.qnas,
+        skills: prod.skills,
+        interviews: prod.interviews,
+        note: prod.note,
+        signature: prod.signature,
+        students: prod.students
+      }).save();
+      // console.log(prod);
+      // return prod._id;
+      // return result.curriculum;
+    })
+    .then(res => {
+      // getComments(res);
+      // getCurriculum(res);
+      // console.log(res);
+    })
+    .catch(err => console.log(err));
+};

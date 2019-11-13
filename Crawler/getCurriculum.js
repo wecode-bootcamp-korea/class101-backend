@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Curriculum = require("models/curriculum");
 
-function getCurriculum(curriculumId) {
+exports.getCurriculum = curriculumId => {
   axios
     .post("https://gql-prod.class101.net/graphql", {
       operationName: "KlassDetailById",
@@ -133,19 +133,16 @@ function getCurriculum(curriculumId) {
       `,
       variables: { klassId: curriculumId }
     })
-    .then(res => {
-      const prod = res.data.data.klass;
+    .then(async res => {
+      const prod = await res.data.data.klass;
       const result = new Curriculum({
         _id: prod._id,
+        firebaseId: prod.firebaseId,
         title: prod.title,
         missionSteps: prod.missionSteps,
         willOpenAt: prod.willOpenAt,
         coverImage: prod.coverImage
-      });
-      // .save();
-      // console.log(result);
+      }).save();
     })
     .catch(err => console.log(err));
-}
-
-module.exports = getCurriculum;
+};
