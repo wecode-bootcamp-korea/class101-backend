@@ -1,9 +1,10 @@
 const axios = require("axios");
-const Product = require("./../api/models/product.js");
+const Product = require("models/product.js");
 const getCurriculum = require("./getCurriculum");
 const getComments = require("./comment");
+const Curriculum = require("models/curriculum");
 
-function getDetails(productId) {
+exports.getDetails = productId => {
   axios
     .post("https://gql-prod.class101.net/graphql", {
       operationName: "ProductDetailById",
@@ -506,11 +507,15 @@ fragment ProductTimeline on Timeline {
 `,
       variables: { productId: productId }
     })
-    .then(res => {
+    .then(async res => {
       const prod = res.data.data.product;
+      const curriculumId = await Curriculum.findOne(
+        { firebaseId: prod.klassId },
+        "_id"
+      );
       const result = new Product({
         _id: prod._id,
-        fireStoreId: prod.firestoreId,
+        firestoreId: prod.firestoreId,
         title: prod.title,
         coverImageUrl: prod.coverImageUrl,
         willOpenAt: prod.willOpenAt,
@@ -520,7 +525,7 @@ fragment ProductTimeline on Timeline {
         wishlistedCount: prod.wishlistedCount,
         packageIds: prod.packageIds,
         denormalizedPackage: prod.denormalizedPackage,
-        curriculum: prod.klassId,
+        curriculum: curriculumId,
         categoryId: prod.categoryId,
         feedbackCount: prod.feedbackCount,
         feedbackGoodCount: prod.feedbackGoodCount,
@@ -536,19 +541,15 @@ fragment ProductTimeline on Timeline {
         interviews: prod.interviews,
         note: prod.note,
         signature: prod.signature,
-        students: prod.students
-      });
-      // .save();
-      // console.log(prod);
+        students: prod.students,
+        createdAt: prod.createdAt
+      }).save();
       // return prod._id;
-      // return result.curriculum;
+      // return prod.klassId;
     })
     .then(res => {
       // getComments(res);
       // getCurriculum(res);
-      // console.log(res);
     })
     .catch(err => console.log(err));
-}
-
-module.exports = getDetails;
+};
