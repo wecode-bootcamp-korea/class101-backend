@@ -18,15 +18,21 @@ const productSchema = new Schema({
       klassItemStands: Array,
       name: String,
       photoUrl: String,
-      shippingSchedule: String,
-      _id: Schema.Types.ObjectId
+      shippingSchedule: String
     }
   ],
-  curriculum: { type: String, ref: "Curriculum" },
+  curriculum: { type: Schema.Types.ObjectId, ref: "Curriculum" },
   categoryId: { type: Schema.Types.ObjectId, ref: "Category" },
   feedbackCount: { type: Number, default: 0 },
   feedbackGoodCount: { type: Number, default: 0 },
-  ownerUser: { type: Schema.Types.ObjectId },
+  ownerUser: {
+    content: String,
+    email: String,
+    name: String,
+    nickName: String,
+    phone: Number,
+    photoUrl: String
+  },
   recommendations: [{ type: String }],
   packageDescription: { type: String },
   difficulty: { type: String },
