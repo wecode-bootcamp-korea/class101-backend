@@ -6,12 +6,16 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
+
 const runCrawler = require("./Crawler");
+const routes = require("routes");
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+
+routes(app);
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -21,25 +25,12 @@ mongoose
   })
   .then(() => {
     console.log("DB Connected to " + process.env.MONGO_URI);
-    runCrawler();
+    // runCrawler();
   })
   .catch(err => {
     console.log("DB Connection Error" + err.message);
   });
 mongoose.Promise = global.Promise;
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Request-With, Content-Type, Accept, Authorization "
-  );
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Headers", "GET, POST, PUT, DELETE, PATCH");
-    return res.status(200).json({});
-  }
-  next();
-});
 
 app.use((req, res, next) => {
   const error = new Error("Not Found");
