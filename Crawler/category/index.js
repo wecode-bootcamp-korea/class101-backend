@@ -1,4 +1,4 @@
-const Category = require("../../api/models/category");
+const Category = require("models/category");
 const query = require("./query");
 const axios = require("axios");
 

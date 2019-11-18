@@ -3,10 +3,10 @@ const productCrawler = require("./product");
 const collectionCrawler = require("./collection");
 
 function runCrawler() {
-  // productCrawler();
-  // categoryCrawler();
-  // curriculumCrawler();
-  // collectionCrawler();
+    productCrawler();
+    // categoryCrawler();
+    // curriculumCrawler();
+    // collectionCrawler();
 }
 module.exports = runCrawler;
 
