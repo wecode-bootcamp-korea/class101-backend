@@ -25,14 +25,7 @@ const productSchema = new Schema({
   categoryId: { type: Schema.Types.ObjectId, ref: "Category" },
   feedbackCount: { type: Number, default: 0 },
   feedbackGoodCount: { type: Number, default: 0 },
-  ownerUser: {
-    content: String,
-    email: String,
-    name: String,
-    nickName: String,
-    phone: Number,
-    photoUrl: String
-  },
+  ownerUser: { type: Schema.Types.ObjectId, ref: "User" },
   recommendations: [{ type: String }],
   packageDescription: { type: String },
   difficulty: { type: String },

@@ -7,7 +7,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const runCrawler = require("./Crawler");
+const runCrawler = require("crawler");
 const routes = require("routes");
 
 app.use(morgan("dev"));
