@@ -7,7 +7,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const runCrawler = require("./Crawler");
+const runCrawler = require("crawler");
 const routes = require("routes");
 
 app.use(morgan("dev"));
@@ -18,33 +18,18 @@ app.use(cors());
 routes(app);
 
 mongoose
-    .connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true
-    })
-    .then(() => {
-        console.log("DB Connected to " + process.env.MONGO_URI);
-        // runCrawler();
-    })
-    .catch(err => {
-        console.log("DB Connection Error" + err.message);
-    });
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+  })
+  .then(() => {
+    console.log("DB Connected to " + process.env.MONGO_URI);
+    // runCrawler();
+  })
+  .catch(err => {
+    console.log("DB Connection Error" + err.message);
+  });
 mongoose.Promise = global.Promise;
-
-app.use((req, res, next) => {
-    const error = new Error("Not Found");
-    error.status = 404;
-    next(error);
-});
-
-app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.json({
-        error: {
-            message: err.message
-        }
-    });
-});
 
 module.exports = app;

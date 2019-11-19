@@ -20,5 +20,3 @@ const curriculumSchema = new Schema({
 });
 
 module.exports = mongoose.model("Curriculum", curriculumSchema);
-
-// ref="MissionSteps"
