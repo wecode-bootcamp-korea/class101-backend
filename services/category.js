@@ -1,10 +1,10 @@
 const Product = require("models/product");
-const getProducts = require("utils/getProducts");
+const productUtil = require("utils/product");
 
 exports.getProductByCategory = async categoryId => {
   const products = await Product.find({ categoryId: categoryId }).select(
-    "title _id coverImageUrl wishlistedCount feedbackCount feedbackGoodCount willOpenAt "
+    "overImageUrl ownerUser willOpenAt feedbackCount feedbackGoodCount wishlistedCount title categoryId createdAt"
   );
 
-  return getProducts.getResponseForList(products);
+  return productUtil.getResponseForList(products);
 };

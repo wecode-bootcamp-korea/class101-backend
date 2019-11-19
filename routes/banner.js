@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { theme, promotion } = require("controllers/banner");
+const bannerController = require("controllers/banner");
 
-router.get("/promotion", promotion);
-router.get("/theme", theme);
+router.get("/promotion", bannerController.promotion);
+router.get("/theme", bannerController.theme);
 
 module.exports = router;

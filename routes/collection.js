@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { list } = require("controllers/collection");
+const collectionController = require("controllers/collection");
 
-router.get("/", list);
+router.get("/", collectionController.list);
 
 module.exports = router;
