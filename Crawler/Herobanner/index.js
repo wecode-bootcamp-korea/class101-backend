@@ -1,5 +1,5 @@
 const axios = require("axios");
-// const query = require("./query");
+const query = require("./query");
 const HeroBanner = require("models/heroBanner");
 
 exports.herobannerCrawler = () => {
