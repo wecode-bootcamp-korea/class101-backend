@@ -1,13 +1,15 @@
 const axios = require("axios");
-const Product = require("models/product.js");
+const Product = require("models/product");
+const User = require("models/user");
+const Curriculum = require("models/curriculum");
 const getCurriculum = require("./getCurriculum");
 const getComments = require("./comment");
 
-function getDetails(productId) {
-    axios
-        .post("https://gql-prod.class101.net/graphql", {
-            operationName: "ProductDetailById",
-            query: `query ProductDetailById($productId: ID!) {
+const getDetails = function(productId) {
+  axios
+    .post("https://gql-prod.class101.net/graphql", {
+      operationName: "ProductDetailById",
+      query: `query ProductDetailById($productId: ID!) {
       product: productById(productId: $productId) {
         ...ProductDetail
         __typename
@@ -504,50 +506,65 @@ fragment ProductTimeline on Timeline {
   __typename
 }
 `,
-            variables: { productId: productId }
-        })
-        .then(res => {
-            const prod = res.data.data.product;
-            const result = new Product({
-                _id: prod._id,
-                fireStoreId: prod.firestoreId,
-                title: prod.title,
-                coverImageUrl: prod.coverImageUrl,
-                willOpenAt: prod.willOpenAt,
-                dueDate: prod.dueDate,
-                score: prod.score,
-                reservationCount: prod.reservationCount,
-                wishlistedCount: prod.wishlistedCount,
-                packageIds: prod.packageIds,
-                denormalizedPackage: prod.denormalizedPackage,
-                curriculum: prod.klassId,
-                categoryId: prod.categoryId,
-                feedbackCount: prod.feedbackCount,
-                feedbackGoodCount: prod.feedbackGoodCount,
-                ownerUser: prod.ownerUser,
-                recommendations: prod.recommendations,
-                packageDescription: prod.packageDescription,
-                difficulty: prod.difficulty,
-                description: prod.description,
-                satisfactionRate: prod.satisfactionRate,
-                summary: prod.summary,
-                qnas: prod.qnas,
-                skills: prod.skills,
-                interviews: prod.interviews,
-                note: prod.note,
-                signature: prod.signature,
-                students: prod.students
-            }).save();
-            // console.log(prod);
-            // return prod._id;
-            // return result.curriculum;
-        })
-        .then(res => {
-            // getComments(res);
-            // getCurriculum(res);
-            // console.log(res);
-        })
-        .catch(err => console.log(err));
-}
+      variables: { productId: productId }
+    })
+    .then(async res => {
+      const prod = res.data.data.product;
+      const curriculum = await Curriculum.findOne({
+        firebaseId: prod.klassId
+      }).select("_id");
+      const result = new Product({
+        _id: prod._id,
+        fireStoreId: prod.firestoreId,
+        title: prod.title,
+        coverImageUrl: prod.coverImageUrl,
+        willOpenAt: prod.willOpenAt,
+        dueDate: prod.dueDate,
+        score: prod.score,
+        reservationCount: prod.reservationCount,
+        wishlistedCount: prod.wishlistedCount,
+        packageIds: prod.packageIds,
+        denormalizedPackage: prod.denormalizedPackage,
+        curriculum: curriculum._id,
+        categoryId: prod.categoryId,
+        feedbackCount: prod.feedbackCount,
+        feedbackGoodCount: prod.feedbackGoodCount,
+        ownerUser: prod.ownerUser._id,
+        recommendations: prod.recommendations,
+        packageDescription: prod.packageDescription,
+        difficulty: prod.difficulty,
+        description: prod.description,
+        satisfactionRate: prod.satisfactionRate,
+        summary: prod.summary,
+        qnas: prod.qnas,
+        skills: prod.skills,
+        interviews: prod.interviews,
+        note: prod.note,
+        signature: prod.signature,
+        students: prod.students
+      });
+      // .save();
+      return prod;
+      // console.log(prod.ownerUser);
+      // return prod._id;
+      // return result.curriculum;
+    })
+    .then(async res => {
+      const user = await new User({
+        _id: res.ownerUser._id,
+        name: res.name,
+        nickname: res.ownerUser.nickName,
+        photoUrl: res.ownerUser.photoUrl,
+        content: res.ownerUser.content,
+        email: res.ownerUser.email,
+        phone: res.ownerUser.phone,
+        myProduct: res._id
+      }).save();
+      // getComments(res);
+      // getCurriculum(res);
+      // console.log(user);
+    })
+    .catch(err => console.log(err));
+};
 
 module.exports = getDetails;

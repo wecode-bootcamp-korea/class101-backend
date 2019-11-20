@@ -2,7 +2,7 @@ const Category = require("models/category");
 const query = require("./query");
 const axios = require("axios");
 
-function categoryCrawler() {
+exports.categoryCrawler = () => {
   axios
     .post("https://gql-prod.class101.net/graphql", query)
     .then(res => {
@@ -15,6 +15,4 @@ function categoryCrawler() {
       });
     })
     .catch(err => console.log(err));
-}
-
-module.exports = categoryCrawler;
+};

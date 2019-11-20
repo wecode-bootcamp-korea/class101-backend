@@ -1,1 +1,0 @@
-const career = require("./query");

@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Comment = require("models/comment");
 
-function commentCrawler(productId) {
+exports.commentCrawler = productId => {
   axios
     .post("https://gql-prod.class101.net/graphql", {
       operationName: "PostList",
@@ -67,6 +67,7 @@ function commentCrawler(productId) {
       res.data.data.posts.forEach(async comment => {
         try {
           const result = await new Comment({
+            _id: comment._id,
             content: comment.content,
             user: comment.user,
             likedCount: comment.likedCount,
@@ -81,6 +82,4 @@ function commentCrawler(productId) {
       });
     })
     .catch(err => console.log(err));
-}
-
-module.exports = commentCrawler;
+};
