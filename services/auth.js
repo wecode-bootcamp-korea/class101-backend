@@ -62,3 +62,17 @@ exports.getTokenGoogle = async id_token => {
     return jwt.sign({ id: user._id }, JWT_SECRET);
   }
 };
+
+exports.checkAuth = (req, res, next) => {
+  try {
+    const userToken = req.headers.authorization;
+
+    const userId = jwt.verify(userToken, JWT_SECRET).id;
+
+    req.userId = userId;
+
+    next();
+  } catch (err) {
+    res.status(401).json({ error: "Auth Failed" });
+  }
+};
