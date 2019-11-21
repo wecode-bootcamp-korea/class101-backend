@@ -5,6 +5,7 @@
 
 my_settings.js
 /node_modules
+/config/google.json
 
 # Logs
 logs

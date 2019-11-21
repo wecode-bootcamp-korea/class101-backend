@@ -43,3 +43,18 @@ exports.loginRequired = catchAsync(async (req, res, next) => {
     return next({ message: "USER DOES NOT EXIST", statusCode: 401 });
   }
 });
+
+exports.google = async (req, res) => {
+  try {
+    const id_token = req.headers.authorization;
+
+    const userToken = await authService.getTokenGoogle(id_token);
+
+    res.status(200).json({ token: userToken });
+  } catch (err) {
+    res.status(400).json({
+      error: err.message,
+      message: "Auth Failed"
+    });
+  }
+};
