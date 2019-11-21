@@ -1,5 +1,5 @@
 const Collection = require("models/collection");
-const getProducts = require("utils/getProducts");
+const productUtil = require("utils/product");
 
 exports.paginatedCollection = async (page, limit) => {
   const start = (page - 1) * limit;
@@ -12,27 +12,18 @@ exports.paginatedCollection = async (page, limit) => {
     )
     .sort("-score");
 
-  let response = [];
+  return Promise.all(
+    collections.slice(start, end).map(async collection => {
+      const { title, _id, description, itemIds } = collection;
 
-  for (const prod of collections.slice(start, end)) {
-    let result = {};
-    if (end < collections.length) {
-      result["next"] = {
-        page: page + 1,
-        limit: limit
+      const data = await productUtil.getResponseForList(itemIds);
+
+      return {
+        title,
+        _id,
+        description,
+        data
       };
-    }
-    if (start > 0) {
-      result["previous"] = {
-        page: page - 1,
-        limit: limit
-      };
-    }
-    result["title"] = prod.title;
-    result["_id"] = prod._id;
-    result["description"] = prod.description;
-    result["data"] = await getProducts.getResponseForList(prod.itemIds);
-    response.push(result);
-  }
-  return response;
+    })
+  );
 };

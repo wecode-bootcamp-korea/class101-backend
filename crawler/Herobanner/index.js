@@ -17,7 +17,6 @@ exports.herobannerCrawler = () => {
           shortTitle: el.shortTitle
         });
         // .save();
-        console.log(result);
       });
     })
     .catch(err => console.log(err));

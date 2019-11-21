@@ -1,13 +1,13 @@
 const Product = require("models/product");
-const service = require("services/product");
+const productService = require("services/product");
 
 exports.detail = async (req, res) => {
   try {
     const productId = req.params.productId;
-    const product = await service.getDetails(productId);
+    const product = await productService.getDetails(productId);
 
     res.status(200).json(product);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(400).json({ error: `Wrong Product Id ${err.value}` });
   }
 };
