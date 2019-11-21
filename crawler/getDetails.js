@@ -552,7 +552,7 @@ fragment ProductTimeline on Timeline {
     .then(async res => {
       const user = await new User({
         _id: res.ownerUser._id,
-        name: res.name,
+        name: res.ownerUser.name,
         nickname: res.ownerUser.nickName,
         photoUrl: res.ownerUser.photoUrl,
         content: res.ownerUser.content,
@@ -562,7 +562,6 @@ fragment ProductTimeline on Timeline {
       }).save();
       // getComments(res);
       // getCurriculum(res);
-      // console.log(user);
     })
     .catch(err => console.log(err));
 };

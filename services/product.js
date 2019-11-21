@@ -4,7 +4,7 @@ exports.getDetails = async productId => {
   let product = await Product.findById(productId)
     .populate("categoryId", "title")
     .populate("curriculum", " title missionSteps coverImage")
-    .populate("ownerUser", "name nickname email photoUrl ");
+    .populate("ownerUser", "name nickname email photoUrl content");
 
   let missoinStepResponse = [];
 
