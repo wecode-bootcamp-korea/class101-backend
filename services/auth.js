@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("models/user");
 const JWT_SECRET = process.env.JWT_SECRET;
+const Axios = require("axios");
 
 exports.signup = async (req, res, next) => {
   const { name, nickname, email, password } = req.body;
@@ -35,5 +36,29 @@ exports.login = async (req, res, next) => {
 };
 
 const generateToken = user => {
-  return jwt.sign({ id: user.email }, JWT_SECRET);
+  return jwt.sign({ id: user._id }, JWT_SECRET);
+};
+
+exports.getTokenGoogle = async id_token => {
+  const userInfo = await Axios.get(
+    `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`
+  );
+
+  const { name: name, email, sub: socialId, picture: photoUrl } = userInfo.data;
+
+  const user = (await User.findOne({ provider: { google: socialId } })) || null;
+
+  if (user === null) {
+    const newUser = await User.create({
+      name,
+      nickname: name,
+      email,
+      provider: { google: socialId },
+      photoUrl
+    });
+
+    return jwt.sign({ id: newUser._id }, JWT_SECRET);
+  } else {
+    return jwt.sign({ id: user._id }, JWT_SECRET);
+  }
 };
