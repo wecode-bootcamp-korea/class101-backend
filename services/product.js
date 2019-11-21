@@ -3,33 +3,34 @@ const Product = require("models/product");
 exports.getDetails = async productId => {
   let product = await Product.findById(productId)
     .populate("categoryId", "title")
-    .populate("curriculum", " title missionSteps coverImage");
+    .populate("curriculum", " title missionSteps coverImage")
+    .populate("ownerUser", "name nickname email photoUrl content");
 
-  let missionSteps = [];
+  let missoinStepResponse = [];
 
-  product.curriculum.missionSteps.forEach(steps => {
-    let missionStep = {};
-    let missions = [];
+  for (const steps of product.curriculum.missionSteps) {
+    const { _id, imageUrls, index, missions, subtitle, title } = steps;
 
-    steps.missions.forEach(mission => {
-      let singleMission = {};
+    const missionlist = [];
 
-      singleMission["title"] = mission.title;
-      singleMission["episode"] = mission.episode;
+    for (const mission of missions) {
+      const { episode, title, _id } = mission;
+      missionlist.push({ episode, title, _id });
+    }
 
-      missions.push(singleMission);
-    });
+    let newStep = {
+      _id,
+      imageUrls,
+      index,
+      missions: missionlist,
+      subtitle,
+      title
+    };
 
-    missionStep["imageUrls"] = steps.imageUrls[0];
-    missionStep["title"] = steps.title;
-    missionStep["subtitle"] = steps.subtitle;
-    missionStep["index"] = steps.index;
-    missionStep["missions"] = missions;
+    missoinStepResponse.push(newStep);
+  }
 
-    missionSteps.push(missionStep);
-  });
-
-  product.curriculum["missionSteps"] = missionSteps;
+  product.curriculum.missionSteps = missoinStepResponse;
 
   return product;
 };

@@ -1,19 +1,22 @@
 const Product = require("models/product");
-const getProducts = require("utils/getProducts");
+const productUtil = require("utils/product");
 
 const getTopten = async () => {
-  const topTen = await getProducts.getProductsBySort("-wishlistedCount");
-  return getProducts.getResponseForList(topTen);
+  const topTen = await productUtil.getProductsBySort("-wishlistedCount");
+
+  return productUtil.getResponseForList(topTen);
 };
 
 const getBrandNew = async () => {
-  const brandNew = await getProducts.getProductsBySort("createdAt");
-  return getProducts.getResponseForList(brandNew);
+  const brandNew = await productUtil.getProductsBySort("createdAt");
+
+  return productUtil.getResponseForList(brandNew);
 };
 
 const getNotice = async () => {
-  const notice = await getProducts.getProductsBySort("wishlistedCount");
-  return getProducts.getResponseForList(notice);
+  const notice = await productUtil.getProductsBySort("wishlistedCount");
+
+  return productUtil.getResponseForList(notice);
 };
 
 const getMdChoice = async () => {
@@ -24,7 +27,8 @@ const getMdChoice = async () => {
     .populate("categoryId", "title")
     .populate("ownerUser", "nickname");
   const mdChoice = products.slice(0, 10);
-  return getProducts.getResponseForList(mdChoice);
+
+  return productUtil.getResponseForList(mdChoice);
 };
 
 exports.getBanners = async () => {
@@ -34,5 +38,6 @@ exports.getBanners = async () => {
     { title: "신규 클래스", data: await getBrandNew() },
     { title: "알림 신청 중인 클래스", data: await getNotice() }
   ];
+
   return response;
 };

@@ -1,5 +1,5 @@
 const HeroBanner = require("models/heroBanner");
-const { getBanners } = require("services/banner");
+const bannerService = require("services/banner");
 
 exports.promotion = async (req, res) => {
   try {
@@ -13,7 +13,7 @@ exports.promotion = async (req, res) => {
 
 exports.theme = async (req, res) => {
   try {
-    const response = await getBanners();
+    const response = await bannerService.getBanners();
 
     res.status(200).json(response);
   } catch (err) {

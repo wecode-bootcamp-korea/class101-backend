@@ -6,24 +6,21 @@ const Product = require("models/product");
 
 collectionCrawler = function() {
   axios
-    .post(
-      "https://gql-prod.class101.net/graphql",
-      query.newCollectionList.query
-    )
+    .post("https://gql-prod.class101.net/graphql", query.createrList.query)
     .then(res => {
       res.data.data.collections.forEach(async col => {
         const items = await getItems(col.itemIds);
-        const result = new Collection({
-          _id: col._id,
-          description: col.description,
-          itemIds: items,
-          score: col.score,
-          title: col.title,
-          imageUrl: col.heroImageUrl
-        }).save();
-        // col.itemIds.forEach(el => {
-        //   getDetails(el);
-        // });
+        // const result = new Collection({
+        //   _id: col._id,
+        //   description: col.description,
+        //   itemIds: items,
+        //   score: col.score,
+        //   title: col.title,
+        //   imageUrl: col.heroImageUrl
+        // }).save();
+        col.itemIds.forEach(el => {
+          getDetails(el);
+        });
       });
     })
     .catch(err => console.log(err));

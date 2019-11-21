@@ -1,6 +1,5 @@
 const Category = require("models/category");
-const Product = require("models/product");
-const service = require("services/category");
+const categoryService = require("services/category");
 
 exports.list = async (req, res) => {
   try {
@@ -15,10 +14,10 @@ exports.list = async (req, res) => {
 exports.single = async (req, res) => {
   try {
     const categoryId = req.params.categoryId;
-    const products = await service.getProductByCategory(categoryId);
+    const products = await categoryService.getProductByCategory(categoryId);
 
     res.status(200).json({ products: products });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: `Wrong Category Id ${err.value}` });
   }
 };
