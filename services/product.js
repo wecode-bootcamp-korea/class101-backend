@@ -1,4 +1,5 @@
 const Product = require("models/product");
+const User = require("models/user");
 
 exports.getDetails = async productId => {
   let product = await Product.findById(productId)
@@ -33,4 +34,20 @@ exports.getDetails = async productId => {
   product.curriculum.missionSteps = missoinStepResponse;
 
   return product;
+};
+
+exports.purchaseProduct = async (productId, userId) => {
+  const user = await User.findById(userId);
+
+  const purchasedProduct =
+    !user.purchasedProducts.includes(productId) &&
+    user.purchasedProducts.concat(productId);
+
+  purchasedProduct &&
+    (await User.updateOne(
+      { _id: userId },
+      { purchasedProducts: purchasedProduct }
+    ));
+
+  return { purchasedProducts: user.purchasedProducts };
 };
