@@ -12,7 +12,14 @@ exports.paginatedCollection = async (page, limit) => {
     )
     .sort("-score");
 
-  return Promise.all(
+  let pageData = {};
+
+  pageData["next"] = end < collections.length && {
+    page: page + 1,
+    limit: limit
+  };
+
+  const response = await Promise.all(
     collections.slice(start, end).map(async collection => {
       const { title, _id, description, itemIds } = collection;
 
@@ -26,4 +33,8 @@ exports.paginatedCollection = async (page, limit) => {
       };
     })
   );
+
+  response.unshift(pageData);
+
+  return response;
 };

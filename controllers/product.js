@@ -11,3 +11,16 @@ exports.detail = async (req, res) => {
     res.status(400).json({ error: `Wrong Product Id ${err.value}` });
   }
 };
+
+exports.purchase = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const userId = req.userId;
+
+    const response = await productService.purchaseProduct(productId, userId);
+
+    res.status(200).json({ message: "success", response });
+  } catch (err) {
+    res.status(400).json({ error: `Wrong Product Id ${err.value}` });
+  }
+};
