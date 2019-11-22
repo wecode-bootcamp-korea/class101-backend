@@ -36,6 +36,8 @@ exports.getResponseForList = async products =>
         willOpenAt
       } = product;
 
+      const nickname = ownerUser ? ownerUser.nickname : "";
+
       const { title: category } = categoryId
         ? await Category.findOne({ _id: categoryId }).select("title")
         : null;
@@ -43,7 +45,7 @@ exports.getResponseForList = async products =>
       const rate = getRate(feedbackGoodCount, feedbackCount);
 
       return {
-        ownerUser: ownerUser.nickname,
+        ownerUser: nickname,
         favorites,
         category,
         rate,
