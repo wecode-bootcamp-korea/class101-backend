@@ -36,6 +36,8 @@ exports.getResponseForList = async products =>
         willOpenAt
       } = product;
 
+      const nickname = ownerUser ? ownerUser.nickname : "";
+
       const { title: category } = categoryId
         ? await Category.findOne({ _id: categoryId }).select("title")
         : null;
