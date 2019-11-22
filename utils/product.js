@@ -44,8 +44,6 @@ exports.getResponseForList = async products =>
 
       const rate = getRate(feedbackGoodCount, feedbackCount);
 
-      const nickname = ownerUser || null;
-
       return {
         ownerUser: nickname,
         favorites,
