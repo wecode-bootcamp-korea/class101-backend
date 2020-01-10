@@ -1,5 +1,7 @@
 ## Ovierview
 온라인 취미 구매&판매 플랫폼 클래스101 Clone Project
+TEAM : 백엔드 개발자 2명 (이새글, 유웅조)
+개발 기간 : 19.11.11 ~ 19.11.22
 
 ## Skills
 - Javascript
